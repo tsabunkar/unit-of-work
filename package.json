@@ -1,6 +1,6 @@
 {
   "name": "unit-of-work-library",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Unit of Work Design Pattern",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
