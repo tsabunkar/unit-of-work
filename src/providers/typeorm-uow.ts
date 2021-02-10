@@ -15,45 +15,31 @@ import {
 export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
   private queryRunner: QueryRunner;
   private transactionManager: EntityManager;
-  private connection: Connection;
+  private readonly connection: Connection;
 
-  constructor() {
-    console.log('INSIDE CONSTRUCTOR OF TypeOrmUnitOfWork');
-    // this.connection = getConnection();
-    // this.queryRunner = this.connection.createQueryRunner();
-  }
+  constructor() {}
 
-  async start(connection): Promise<void> {
-    // console.log(
-    //   'BEFORE CONNECTION EST*****',
-    //   this.connection,
-    //   'Boolean value for - getConnectionManager().has("default") ',
-    //   getConnectionManager().has('default')
-    // );
-    // if (!getConnectionManager().has('default')) {
-    //   // ? load connection options from ormconfig or environment
-    //   // const connectionOptions = await getConnectionOptions();
-    //   this.connection = await createConnection({
-    //     type: 'postgres',
-    //     host: '172.17.0.2',
-    //     port: 5432,
-    //     username: 'postgres',
-    //     password: 'root',
-    //     database: 'dev',
-    //     entities: ['dist/**/*.entity{.ts,.js}', 'dist/entity/entities/*.js'],
-    //     synchronize: false,
-    //     logging: true,
-    //   });
-    // } else {
-    //   this.connection = getConnection();
-    // }
+  async init() {
+    let connection: Connection;
 
-    // console.log('AFTER CONNECTION EST*****', this.connection);
-    // this.queryRunner = this.connection.createQueryRunner();
-    // console.log('----------------');
+    console.log(
+      'Any Previous Connection Instance',
+      getConnectionManager().has('default')
+    );
+
+    if (!getConnectionManager().has('default')) {
+      // ? load connection options from ormconfig or environment
+      const connectionOptions = await getConnectionOptions();
+      connection = await createConnection(connectionOptions);
+    } else {
+      connection = getConnection();
+    }
 
     this.queryRunner = connection.createQueryRunner();
+  }
 
+  async start(): Promise<void> {
+    await this.init();
     await this.queryRunner.connect();
     await this.queryRunner.startTransaction();
     this.setTransactionManager();
@@ -75,14 +61,13 @@ export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
 
   async complete(work: () => void): Promise<void> {
     try {
-      work();
+      await work();
       await this.queryRunner.commitTransaction();
     } catch (error) {
       await this.queryRunner.rollbackTransaction();
       throw error;
     } finally {
       await this.queryRunner.release(); //release the used db connections.
-      // await this.connection.close(); // close db connection
     }
   }
 }
