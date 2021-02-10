@@ -1,6 +1,6 @@
 {
   "name": "unit-of-work-library",
-  "version": "1.0.1",
+  "version": "1.0.18",
   "description": "Unit of Work Design Pattern",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,5 +32,8 @@
   },
   "devDependencies": {
     "typescript": "^4.1.4"
+  },
+  "peerDependencies": {
+    "typeorm": "^0.2.31"
   }
 }

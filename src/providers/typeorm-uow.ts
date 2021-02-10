@@ -7,19 +7,53 @@ import {
   Repository,
   EntitySchema,
   ObjectType,
+  getConnectionManager,
+  getConnectionOptions,
+  createConnection,
 } from 'typeorm';
 
 export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
-  private readonly queryRunner: QueryRunner;
+  private queryRunner: QueryRunner;
   private transactionManager: EntityManager;
-  private readonly connection: Connection;
+  private connection: Connection;
 
   constructor() {
-    this.connection = getConnection();
-    this.queryRunner = this.connection.createQueryRunner();
+    console.log('INSIDE CONSTRUCTOR OF TypeOrmUnitOfWork');
+    // this.connection = getConnection();
+    // this.queryRunner = this.connection.createQueryRunner();
   }
 
-  async start(): Promise<void> {
+  async start(connection): Promise<void> {
+    // console.log(
+    //   'BEFORE CONNECTION EST*****',
+    //   this.connection,
+    //   'Boolean value for - getConnectionManager().has("default") ',
+    //   getConnectionManager().has('default')
+    // );
+    // if (!getConnectionManager().has('default')) {
+    //   // ? load connection options from ormconfig or environment
+    //   // const connectionOptions = await getConnectionOptions();
+    //   this.connection = await createConnection({
+    //     type: 'postgres',
+    //     host: '172.17.0.2',
+    //     port: 5432,
+    //     username: 'postgres',
+    //     password: 'root',
+    //     database: 'dev',
+    //     entities: ['dist/**/*.entity{.ts,.js}', 'dist/entity/entities/*.js'],
+    //     synchronize: false,
+    //     logging: true,
+    //   });
+    // } else {
+    //   this.connection = getConnection();
+    // }
+
+    // console.log('AFTER CONNECTION EST*****', this.connection);
+    // this.queryRunner = this.connection.createQueryRunner();
+    // console.log('----------------');
+
+    this.queryRunner = connection.createQueryRunner();
+
     await this.queryRunner.connect();
     await this.queryRunner.startTransaction();
     this.setTransactionManager();
@@ -41,7 +75,7 @@ export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
 
   async complete(work: () => void): Promise<void> {
     try {
-      await work();
+      work();
       await this.queryRunner.commitTransaction();
     } catch (error) {
       await this.queryRunner.rollbackTransaction();

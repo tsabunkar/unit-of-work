@@ -1,5 +1,5 @@
 export interface TransactionUnitOfWork {
-  start(): Promise<void>;
+  start(connection): Promise<void>;
   complete(work: () => void): Promise<void>;
   registerRepository(repositry);
   registerCustomRepository(customRepository);
