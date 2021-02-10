@@ -1,16 +1,24 @@
 {
-  "name": "unit-of-work-lib",
+  "name": "unit-of-work-library",
   "version": "1.0.0",
   "description": "Unit of Work Design Pattern",
-  "main": "index.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "link": "npm run build && cd dist && npm link"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tsabunkar/unit-of-work-lib.git"
   },
+  "keywords": [
+    "typescript",
+    "library",
+    "unit-of-work",
+    "design-pattern"
+  ],
   "author": "Tejas Sabunkar",
   "license": "ISC",
   "bugs": {
@@ -22,5 +30,7 @@
     "inversify": "^5.0.5",
     "typeorm": "^0.2.31"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "^4.1.4"
+  }
 }
