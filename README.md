@@ -2,7 +2,7 @@
 
 - Improvise microservice(s) architecture layer by introducing Unit of Work design pattern in-order to solve common problem related to handling database transactions
 
-# UoW Description
+# Philosophy
 
 - Problem - Irregularity of Handling database transaction in Service Layer via ORM
 - Solution - Using Design Pattern : Unit Of Work (Group one or many operation/work into Single Transaction as unit)
@@ -17,16 +17,25 @@
   - Structures your database transactions flow
   - Removes Code-smell i.e- Managing database transaction in Service Layer
 
-# unit-of-work
+# Description
 
 - Unit of Work pattern is used to group one or more operations (usually database operations) into a single transaction or “unit of work”, so that all operations either pass or fail as one.
 - for example of we want to save/POST data in sequential order but transactions fail in while saving the data in some table then ==> How we will handle this transaction ? (Instead of re-writting code -> Create a design pattern/ Helper functions which can be used by other feature modules while performing db transactions )
 - NOTE: Managing database transactions in your service layer as a code smell.
 
-# Usage
+# Installation
+
+You can get the latest release and the type definitions using npm:
+
+```
+$ npm install unit-of-work --save
+```
+
+# Basic Usage
 
 ```ts
-import { getCustomRepository, getConnection } from 'typeorm'; // ❌ Anti-pattern <= Handling database transaction in Service Layer (Code-smell)
+import { getCustomRepository, getConnection } from 'typeorm'; // ❌ Anti-pattern <= Handling database
+//transaction in Service Layer (Code-smell)
 @Injectable()
 export class CountriesService {
   async createCountry(country: Countries): Promise<string> {
@@ -50,7 +59,7 @@ export class CountriesService {
 }
 ```
 
-> Using unit-of-work utility (Coding done right !!)
+Using unit-of-work utility (Coding done right !!)
 
 ```ts
 import { TransactionFactory } from 'unit-of-work'; // ✅  Design-Pattern <= Using UoW (Clean Code)
@@ -75,7 +84,7 @@ export class CountriesService {
 }
 ```
 
-> Another Example of handling ton amount of work together
+Another Example of handling ton amount of work together
 
 ```ts
 import { TransactionFactory } from 'unit-of-work'; // ✅  Design-Pattern <= Using UoW (Clean Code)
@@ -100,3 +109,23 @@ export class CountriesService {
   }
 }
 ```
+
+# Support
+
+If you are experience any kind of issues we will be happy to help. You can report an issue using the issues page or the chat. You can also ask questions at Stack overflow using the unit-of-work tag.
+
+If you want to share your thoughts with the development team or join us you will be able to do so using the official the mailing list. You can check out the wiki to learn more about unit-of-work internals.
+
+# License
+
+License under the MIT License (MIT)
+
+Copyright © 2021 Tejas Sabunkar
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
