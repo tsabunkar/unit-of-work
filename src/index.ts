@@ -1,1 +1,1 @@
-export { TransactionUnitOfWorkFactory } from './providers/transaction-uow.factory';
+export { TransactionFactory } from './providers/transaction-uow.factory';

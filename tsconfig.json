@@ -5,9 +5,11 @@
     "declaration": true, // This will generate the .d.ts files (for consumer to get Typesafety)
     "removeComments": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["reflect-metadata"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]

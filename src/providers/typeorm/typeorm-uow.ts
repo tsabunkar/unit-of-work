@@ -10,10 +10,8 @@ import {
   getConnectionOptions,
   createConnection,
 } from 'typeorm';
-import { injectable } from 'inversify';
 import { TransactionUnitOfWork } from '../transaction-uow.interface';
 
-@injectable()
 export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
   private queryRunner: QueryRunner;
   private transactionManager: EntityManager;
