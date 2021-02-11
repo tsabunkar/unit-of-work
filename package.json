@@ -1,15 +1,16 @@
 {
   "name": "unit-of-work",
-  "version": "1.3.35",
+  "version": "1.3.38",
   "description": "Unit of Work Design Pattern",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf ./dist && tsc -p .",
-    "start": "npm run build -- -w",
+    "compile-tsc": "tsc -p .",
+    "start": "npm run compile-tsc -- -w",
     "link": "npm run build && cd dist && npm link",
-    "publish": "tsc && npm run publish"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
