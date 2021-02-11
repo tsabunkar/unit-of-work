@@ -1,6 +1,6 @@
 {
-  "name": "unit-of-work-library",
-  "version": "1.3.3",
+  "name": "unit-of-work",
+  "version": "1.3.34",
   "description": "Unit of Work Design Pattern",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tsabunkar/unit-of-work-lib.git"
+    "url": "git+https://github.com/tsabunkar/unit-of-work.git"
   },
   "keywords": [
     "typescript",
@@ -22,9 +22,9 @@
   "author": "Tejas Sabunkar",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tsabunkar/unit-of-work-lib/issues"
+    "url": "https://github.com/tsabunkar/unit-of-work/issues"
   },
-  "homepage": "https://github.com/tsabunkar/unit-of-work-lib#readme",
+  "homepage": "https://github.com/tsabunkar/unit-of-work#readme",
   "dependencies": {
     "@nestjs/typeorm": "^7.1.5",
     "inversify": "^5.0.5",
