@@ -1,4 +1,3 @@
-import { TransactionUnitOfWork } from './transaction-uow.interface';
 import {
   Connection,
   QueryRunner,
@@ -11,24 +10,21 @@ import {
   getConnectionOptions,
   createConnection,
 } from 'typeorm';
+import { injectable } from 'inversify';
+import { TransactionUnitOfWork } from '../transaction-uow.interface';
 
+@injectable()
 export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
   private queryRunner: QueryRunner;
   private transactionManager: EntityManager;
-  private readonly connection: Connection;
 
   constructor() {}
 
   async init() {
     let connection: Connection;
 
-    console.log(
-      'Any Previous Connection Instance',
-      getConnectionManager().has('default')
-    );
-
     if (!getConnectionManager().has('default')) {
-      // ? load connection options from ormconfig or environment
+      // ? load connection options from ormconfig or environment of source
       const connectionOptions = await getConnectionOptions();
       connection = await createConnection(connectionOptions);
     } else {
@@ -45,7 +41,7 @@ export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
     this.setTransactionManager();
   }
 
-  setTransactionManager(): void {
+  private setTransactionManager(): void {
     this.transactionManager = this.queryRunner.manager;
   }
 
@@ -65,9 +61,10 @@ export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
       await this.queryRunner.commitTransaction();
     } catch (error) {
       await this.queryRunner.rollbackTransaction();
+      console.error(error); // TODO: Logging can be better
       throw error;
     } finally {
-      await this.queryRunner.release(); //release the used db connections.
+      await this.queryRunner.release(); //release the used query Runner Instance.
     }
   }
 }

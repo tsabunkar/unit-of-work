@@ -3,8 +3,12 @@
     "module": "commonjs",
     "target": "es2015",
     "declaration": true, // This will generate the .d.ts files (for consumer to get Typesafety)
+    "removeComments": true,
     "experimentalDecorators": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "skipLibCheck": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
 }
