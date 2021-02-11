@@ -29,49 +29,50 @@
 import { getCustomRepository, getConnection } from 'typeorm'; // ❌ Anti-pattern <= Handling database transaction in Service Layer (Code-smell)
 @Injectable()
 export class CountriesService {
-    async createCountry(country: Countries): Promise<string> {
-        const connection = getConnection(); // ❌ Manually handling Connections, queryRunner, commits, rollbacks
-        const queryRunner = connection.createQueryRunner();
+  async createCountry(country: Countries): Promise<string> {
+    const connection = getConnection(); // ❌ Manually handling Connections, queryRunner, commits, rollbacks
+    const queryRunner = connection.createQueryRunner();
 
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {                               // ❌ Irregularity in Error Handling
-          await queryRunner.manager.getRepository(Countries).save(country);
-          await queryRunner.commitTransaction();
-        } catch (err) {
-          await queryRunner.rollbackTransaction();
-        } finally {                         // ❌ Unstructured flow
-          await queryRunner.release();
-        }
-        return;
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      // ❌ Irregularity in Error Handling
+      await queryRunner.manager.getRepository(Countries).save(country);
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      // ❌ Unstructured flow
+      await queryRunner.release();
+    }
+    return;
+  }
 }
-
 ```
 
 > Using unit-of-work utility (Coding done right !!)
 
 ```ts
-import {TransactionFactory} from 'unit-of-work'; // ✅  Design-Pattern <= Using UoW (Clean Code)
+import { TransactionFactory } from 'unit-of-work'; // ✅  Design-Pattern <= Using UoW (Clean Code)
 @Injectable()
 export class CountriesService {
-   constructor(
-     private transactionFactory: TransactionFactory
-     ) {}
+  constructor(private transactionFactory: TransactionFactory) {}
 
-    async createCountry(country: Countries): Promise<string> {
-      const transaction = this.transactionFactory.registerORM('typeorm'); // ✅ Register your ORM Vendor
+  async createCountry(country: Countries): Promise<string> {
+    const transaction = this.transactionFactory.registerORM('typeorm'); // ✅ Register your ORM Vendor
 
-      await transaction.start(); // ✅ Start unit of work
+    await transaction.start(); // ✅ Start unit of work
 
-      const work = () => { // ✅ Mention all your work - under this function
-        const countriesRepository = transaction.registerRepository(Countries);
-        countriesRepository.save(country);
-      };
+    const work = () => {
+      // ✅ Mention all your work - under this function
+      const countriesRepository = transaction.registerRepository(Countries);
+      countriesRepository.save(country);
+    };
 
-       transaction.complete(work); // ✅ Complete your work 😉
-       return;
+    transaction.complete(work); // ✅ Complete your work 😉
+    return;
+  }
 }
-
 ```
 
 > Another Example of handling ton amount of work together
