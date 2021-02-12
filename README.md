@@ -9,7 +9,7 @@ Improvise microservice(s) architecture layer by introducing Unit of Work design 
 - Library Responsibility -
   - Handles Database transaction operations like- create connections, commit, rollback, release connection, etc
 
-# Philosophy & Benefits
+# Philosophy
 
 This library has been developed with main goals and provide benefits:
 
@@ -28,8 +28,8 @@ This library has been developed with main goals and provide benefits:
 # Description
 
 - Unit of Work pattern is used to group one or more operations (usually database operations) into a single transaction or “unit of work”, so that all operations either pass or fail as one.
-- for example of we want to save/POST data in sequential order but transactions fail in while saving the data in some table then ==> How we will handle this transaction ? (Instead of re-writting code -> Create a design pattern/ Helper functions which can be used by other feature modules while performing db transactions )
-- NOTE: Managing database transactions in your service layer as a code smell.
+- for example of we want to save/POST data in sequential order but transactions fail in while saving the data in some table then - Q) How we will handle this transaction ? (Instead of re-writting code -> Create a design pattern/ Helper functions which can be used by other feature modules while performing db transactions )
+- NOTE: Managing database transactions in your service layer and tight copuling with ORM tool is clearly a code smell.
 
 # Installation
 
@@ -133,7 +133,7 @@ export class CountriesService {
 
 # Golden Rules 🌟
 
-To sum-up : This library provide 3 Golden 🥇 methods i.e-
+To Sum-up : This Library provide 3 Golden 🥇 Methods i.e-
 
 ```ts
 // 1. Register your ORM Vendor
@@ -151,17 +151,17 @@ const work = () => {
 await transaction.complete(work);
 ```
 
-# Support
+## Support
 
 If you are experience any kind of issues we will be happy to help. You can report an issue using the issues page or the chat. You can also ask questions at Stack overflow using the unit-of-work tag.
 
 If you want to share your thoughts with the development team or join us you will be able to do so using the official the mailing list. You can check out the wiki to learn more about unit-of-work internals.
 
-# Maintainer(s)
+## Maintainers
 
 - Tejas Sabunkar <tsabunkar@gmail.com>
 
-# License
+## License
 
 License under the MIT License (MIT)
 
