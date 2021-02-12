@@ -1,21 +1,29 @@
 # Motivation
 
-- Improvise microservice(s) architecture layer by introducing Unit of Work design pattern in-order to solve common problem related to handling database transactions
+Improvise microservice(s) architecture layer by introducing Unit of Work design pattern in-order to solve common problem related to handling database transactions
 
-# Philosophy
+# About
 
-- Problem - Irregularity of Handling database transaction in Service Layer via ORM
+- Problem- Irregularity of Handling database transaction in Service Layer via ORM (like- TypeORM, Sequelize, etc)
 - Solution - Using Design Pattern : Unit Of Work (Group one or many operation/work into Single Transaction as unit)
 - Library Responsibility -
   - Handles Database transaction operations like- create connections, commit, rollback, release connection, etc
-- Benefits of using this Library -
-  - Layered Architecture
-  - Uniformity of Code Guaranteed
-  - Error Handling taken care
-  - Plug-and-play (just import)
-  - Solves Concurrency Problem
-  - Structures your database transactions flow
-  - Removes Code-smell i.e- Managing database transaction in Service Layer
+
+# Philosophy & Benefits
+
+This library has been developed with main goals and provide benefits:
+
+- Loose Coupling between Service/Repositry Layer and ORM Library.
+- Layered Architecture.
+- Uniformity of Code Guaranteed.
+- Error Handling taken care.
+- Plug-and-play (just import).
+- Solves Concurrency Problem.
+- Structures your database transactions flow.
+- Removes Code-smell i.e- Managing database transaction in Service Layer.
+- Allow Typescript/JavaScript developers to write code that adheres to the SOLID principles.
+- Provide a state of the art development experience.
+- Facilitate and encourage the adherence to the best OOP practices.
 
 # Description
 
@@ -33,13 +41,16 @@ $ npm install unit-of-work --save
 
 # Basic Usage
 
+Let us first see how typically we write code to save a object
+
 ```ts
-import { getCustomRepository, getConnection } from 'typeorm'; // ❌ Anti-pattern <= Handling database
-//transaction in Service Layer (Code-smell)
+import { getCustomRepository, getConnection } from 'typeorm'; // ❌ Anti-pattern
+//i,e- Handling database transaction in Service Layer thus tightly coupled
+// b/w Service Layer and TyperORM library (Code-smell)
 @Injectable()
 export class CountriesService {
   async createCountry(country: Countries): Promise<string> {
-    const connection = getConnection(); // ❌ Manually handling Connections, queryRunner, commits, rollbacks
+    const connection = getConnection(); // ❌ Manually handling Connections, queryRunner, commits, rollbacks (should have good-knowldge)
     const queryRunner = connection.createQueryRunner();
 
     await queryRunner.connect();
@@ -51,7 +62,7 @@ export class CountriesService {
     } catch (err) {
       await queryRunner.rollbackTransaction();
     } finally {
-      // ❌ Unstructured flow
+      // ❌ Unstructured & Uncertainty in flow
       await queryRunner.release();
     }
     return;
@@ -59,10 +70,10 @@ export class CountriesService {
 }
 ```
 
-Using unit-of-work utility (Coding done right !!)
+Now using unit-of-work utility I would urge to follow
 
 ```ts
-import { TransactionFactory } from 'unit-of-work'; // ✅  Design-Pattern <= Using UoW (Clean Code)
+import { TransactionFactory } from 'unit-of-work'; // ✅  Design-Pattern <= Using UoW (loosely coupled)
 @Injectable()
 export class CountriesService {
   constructor(private transactionFactory: TransactionFactory) {}
@@ -84,10 +95,20 @@ export class CountriesService {
 }
 ```
 
-Another Example of handling ton amount of work together
+Don't forget to provide in providers array of you Module file
 
 ```ts
-import { TransactionFactory } from 'unit-of-work'; // ✅  Design-Pattern <= Using UoW (Clean Code)
+import { TransactionFactory } from 'unit-of-work';
+@Module({
+  providers: [TransactionFactory],
+})
+export class CountriesModule {}
+```
+
+Let us look into another example of handling ton 🏋🏼 amount of work together
+
+```ts
+import { TransactionFactory } from 'unit-of-work';
 @Injectable()
 export class CountriesService {
   constructor(private transactionFactory: TransactionFactory) {}
@@ -100,7 +121,7 @@ export class CountriesService {
     const work = () => {
       const countriesRepository = transaction.registerRepository(Countries);
       for (const country of countries) {
-        countriesRepository.save(country); // Saving list of countries
+        countriesRepository.save(country); // Saving list of countries object
       }
     };
 
@@ -110,11 +131,35 @@ export class CountriesService {
 }
 ```
 
+# Golden Rules 🌟
+
+To sum-up : This library provide 3 Golden 🥇 methods i.e-
+
+```ts
+// 1. Register your ORM Vendor
+const transaction = this.transactionFactory.registerORM('<vendor_name>'); // typeorm or sequelize
+
+// 2. Start your transaction
+await transaction.start();
+
+// 3.1 Mention all your work here
+const work = () => {
+  // logic
+};
+
+// 3.2 Complete your transaction
+await transaction.complete(work);
+```
+
 # Support
 
 If you are experience any kind of issues we will be happy to help. You can report an issue using the issues page or the chat. You can also ask questions at Stack overflow using the unit-of-work tag.
 
 If you want to share your thoughts with the development team or join us you will be able to do so using the official the mailing list. You can check out the wiki to learn more about unit-of-work internals.
+
+# Maintainer(s)
+
+- Tejas Sabunkar <tsabunkar@gmail.com>
 
 # License
 
