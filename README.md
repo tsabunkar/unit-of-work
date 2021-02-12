@@ -95,7 +95,7 @@ export class CountriesService {
 }
 ```
 
-Don't forget to provide in providers array of you Module file
+Don't forget to provide **TransactionFactory** in providers array of you Module file
 
 ```ts
 import { TransactionFactory } from 'unit-of-work';
