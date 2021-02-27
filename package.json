@@ -10,7 +10,9 @@
     "compile-tsc": "tsc -p .",
     "start": "npm run compile-tsc -- -w",
     "link": "npm run build && cd dist && npm link",
-    "prepublish": "npm run build"
+    "prepublish:scripts": "npm run build && node prepublish.js",
+    "prepublishOnly": "PUBLISH_MODE=true npm run prepublish:scripts",
+    "release": "PUBLISH_MODE=false npm run prepublish:scripts"
   },
   "repository": {
     "type": "git",
