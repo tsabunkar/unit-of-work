@@ -53,10 +53,11 @@ export class TypeOrmUnitOfWork implements TransactionUnitOfWork {
     return this.transactionManager.getCustomRepository(customRepository);
   }
 
-  async complete(work: () => void): Promise<void> {
+  async complete<T>(work: () => T | Promise<T>): Promise<T> {
     try {
-      await work();
+      const result = await work();
       await this.queryRunner.commitTransaction();
+      return result;
     } catch (error) {
       await this.queryRunner.rollbackTransaction();
       console.error(error); // TODO: Logging can be better

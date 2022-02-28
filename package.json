@@ -1,6 +1,6 @@
 {
   "name": "unit-of-work",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Unit of Work pattern is used to group one or more operations (usually database operations) into a single transaction or “unit of work”, so that all operations either pass or fail as one. This utility is implemented in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

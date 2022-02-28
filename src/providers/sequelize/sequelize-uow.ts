@@ -5,7 +5,7 @@ export class SequelizeUnitOfWork implements TransactionUnitOfWork {
   start(): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  complete(work: () => void): Promise<void> {
+  complete<T>(work: () => T | Promise<T>): Promise<T> {
     throw new Error('Method not implemented.');
   }
   registerRepository(repositry: any) {
